@@ -4,7 +4,7 @@ echo    Установка Telegram Shop Bot
 echo ========================================
 echo.
 
-echo [1/4] Проверка Python...
+echo [1/3] Проверка Python...
 python --version
 if %errorlevel% neq 0 (
     echo ОШИБКА: Python не найден!
@@ -14,35 +14,24 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo [2/4] Установка зависимостей...
-echo Попытка 1: Минимальные зависимости...
-pip install -r requirements-minimal.txt
+echo [2/3] Установка зависимостей...
+pip install -r requirements.txt
 if %errorlevel% neq 0 (
-    echo Попытка 2: Полные зависимости...
-    pip install -r requirements-windows.txt
-    if %errorlevel% neq 0 (
-        echo Попытка 3: Только основные библиотеки...
-        pip install aiogram==2.25.2 phonenumbers
-        if %errorlevel% neq 0 (
-            echo ОШИБКА: Не удалось установить зависимости!
-            echo Попробуйте установить вручную: pip install aiogram phonenumbers
-            pause
-            exit /b 1
-        )
-    )
+    echo ОШИБКА: Не удалось установить зависимости!
+    echo Попробуйте: pip install aiogram phonenumbers
+    pause
+    exit /b 1
 )
 
 echo.
-echo [3/4] Создание конфигурации...
+echo [3/3] Создание конфигурации...
 if not exist config.txt (
     copy config.example.txt config.txt
-    echo Создан файл config.txt
+    echo Файл config.txt создан
 ) else (
     echo Файл config.txt уже существует
 )
 
-echo.
-echo [4/4] Создание необходимых папок...
 if not exist "src\backups" mkdir "src\backups"
 echo Папка backups создана
 
@@ -59,7 +48,5 @@ echo.
 echo 2. Запустите бота командой:
 echo    cd src
 echo    python main.py
-echo.
-echo Подробные инструкции: LOCAL_SETUP.md
 echo.
 pause

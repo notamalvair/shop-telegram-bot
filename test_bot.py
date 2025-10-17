@@ -70,7 +70,8 @@ try:
     print(f"✅ Токен получен: {token[:10]}...")
     
     print("\n🚀 Запуск main.py...")
-    exec(open('main.py').read())
+    with open('main.py', 'r', encoding='utf-8') as f:
+        exec(f.read())
     
 except KeyboardInterrupt:
     print("\n⏹️ Остановлено пользователем")

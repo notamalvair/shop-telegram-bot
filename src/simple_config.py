@@ -4,7 +4,7 @@
 import os
 
 class SimpleConfig:
-    def __init__(self, config_path="../config.txt"):
+    def __init__(self, config_path="config.txt"):
         self.config_path = config_path
         self.config = {}
         self.load_config()
@@ -13,7 +13,7 @@ class SimpleConfig:
         """Загружает конфигурацию из файла"""
         if not os.path.exists(self.config_path):
             print(f"❌ Файл конфигурации не найден: {self.config_path}")
-            print("📋 Создайте файл config.txt в корневой папке проекта")
+            print("📋 Создайте файл config.txt в папке src")
             exit(1)
         
         try:

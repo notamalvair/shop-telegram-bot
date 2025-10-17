@@ -32,6 +32,11 @@ c = conn.cursor()
 
 settings = Settings()
 
+# Инициализация базы данных
+print("🔧 Инициализация базы данных...")
+settings.create_database()
+print("✅ База данных готова!")
+
 storage = MemoryStorage()
 bot = Bot(token=settings.get_token())
 dp = Dispatcher(bot, storage=storage)
@@ -44,7 +49,7 @@ def create_backup():
             remove(folder_path + "/" + file)
         rmdir(folder_path)
     mkdir(folder_path)
-    copyfile("config.ini", folder_path + "/config.ini")
+    copyfile("config.txt", folder_path + "/config.txt")
     copyfile("data.db", folder_path + "/data.db")
     print("Backup created!")
 

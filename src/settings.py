@@ -98,7 +98,7 @@ class Settings:
     
     # database methods (сохраняем для совместимости)
     def create_database(self):
-        conn = sqlite3.connect("../database.db")
+        conn = sqlite3.connect("data.db")
         cursor = conn.cursor()
         
         cursor.execute("""CREATE TABLE IF NOT EXISTS users (

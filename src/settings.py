@@ -20,7 +20,15 @@ class Settings:
     
     # main_settings
     def get_token(self):
-        return self.__get_config()["main_settings"]["token"]
+        try:
+            return self.__get_config()["main_settings"]["token"]
+        except KeyError:
+            print("❌ Ошибка: Конфигурационный файл не найден или не настроен!")
+            print("📋 Сначала запустите установщик:")
+            print("   python installer.py")
+            print("   или")
+            print("   python3 installer.py")
+            exit(1)
     
     def set_token(self, value):
         self.__set_setting("main_settings", "token", value)

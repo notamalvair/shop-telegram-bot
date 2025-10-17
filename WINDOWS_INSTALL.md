@@ -38,12 +38,28 @@ conda install -c conda-forge pymorphy2
 pip install --only-binary=all pymorphy2
 ```
 
-## Запуск бота
+## Настройка и запуск бота
+
+### 1. Сначала запустите установщик (ОБЯЗАТЕЛЬНО!)
+
+```bash
+# Из корневой папки проекта
+python installer.py
+```
+
+Установщик попросит:
+- **Токен бота** (получите у @BotFather в Telegram)
+- **ID главного администратора** (ваш Telegram ID)
+
+### 2. Запуск бота
 
 ```bash
 cd src
 python main.py
 ```
+
+### ⚠️ Важно!
+Если вы получаете ошибку `KeyError: 'main_settings'`, значит вы пропустили шаг 1. Обязательно запустите `python installer.py` перед запуском бота!
 
 ## Функциональность поиска
 

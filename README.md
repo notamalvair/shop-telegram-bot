@@ -12,14 +12,15 @@ cd shop-telegram-bot
 
 2. **Запустите автоустановку:**
 ```bash
-run.bat  # Windows - установит зависимости и запустит бота
+run.bat     # Windows (English interface)
+run-ru.bat  # Windows (Русский интерфейс)
 ```
 
 3. **При первом запуске:**
 - Откройте `src/config.txt`
 - Вставьте токен бота (получите у @BotFather)
 - Вставьте ваш ID администратора (получите у @userinfobot)
-- Запустите `run.bat` снова
+- Запустите скрипт снова
 
 ## ✨ Функции
 

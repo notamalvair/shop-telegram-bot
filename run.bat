@@ -1,48 +1,49 @@
 @echo off
+chcp 65001 >nul
 echo ========================================
-echo      Telegram Shop Bot - Автозапуск
+echo      Telegram Shop Bot - Autostart
 echo ========================================
 echo.
 
-echo [1/4] Проверка Python...
+echo [1/4] Checking Python...
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ Python не найден! Установите Python с https://www.python.org/downloads/
+    echo X Python not found! Install Python from https://www.python.org/downloads/
     pause
     exit /b 1
 )
 
-echo [2/4] Установка зависимостей...
+echo [2/4] Installing dependencies...
 pip install -r requirements.txt >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ Ошибка установки зависимостей!
+    echo X Error installing dependencies!
     pause
     exit /b 1
 )
 
-echo [3/4] Проверка конфигурации...
+echo [3/4] Checking configuration...
 if not exist "src\config.txt" (
     if exist "src\config.example.txt" (
         copy "src\config.example.txt" "src\config.txt" >nul
-        echo ⚠️  Создан файл src\config.txt
-        echo 📝 НАСТРОЙТЕ КОНФИГУРАЦИЮ:
-        echo    - Откройте src\config.txt
-        echo    - Вставьте токен бота (получите у @BotFather)
-        echo    - Вставьте ваш ID администратора (получите у @userinfobot)
+        echo ! Created file src\config.txt
+        echo CONFIGURE THE BOT:
+        echo    - Open src\config.txt
+        echo    - Insert bot token (get from @BotFather)
+        echo    - Insert your admin ID (get from @userinfobot)
         echo.
         pause
         exit /b 0
     ) else (
-        echo ❌ Файл конфигурации не найден!
+        echo X Configuration file not found!
         pause
         exit /b 1
     )
 )
 
-echo [4/4] Запуск бота...
+echo [4/4] Starting bot...
 cd src
 python main.py
 
 echo.
-echo Бот остановлен.
+echo Bot stopped.
 pause

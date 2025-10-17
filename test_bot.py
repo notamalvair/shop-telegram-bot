@@ -18,6 +18,8 @@ for item in os.listdir('src'):
 
 print("\n🔧 Проверка конфигурации...")
 try:
+    # Переходим в папку src для правильной работы с конфигом
+    os.chdir('src')
     from simple_config import config
     print("✅ Модуль simple_config загружен")
     
@@ -39,7 +41,7 @@ except Exception as e:
 print("\n🗄️ Проверка базы данных...")
 try:
     import sqlite3
-    conn = sqlite3.connect('src/data.db')
+    conn = sqlite3.connect('data.db')
     cursor = conn.cursor()
     
     # Проверяем таблицы
@@ -55,8 +57,7 @@ except Exception as e:
 
 print("\n🤖 Попытка запуска бота...")
 try:
-    os.chdir('src')
-    print("📁 Переключились в папку src")
+    print("📁 Уже в папке src")
     
     # Импортируем основные модули
     from settings import Settings

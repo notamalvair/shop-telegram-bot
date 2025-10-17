@@ -13,47 +13,16 @@
 ## 🚀 Быстрый запуск
 
 ### Автоматическая установка (рекомендуется)
+1. `git clone https://github.com/notamalvair/shop-telegram-bot.git`
+2. Запустите `install.bat` (Windows) или `./install.sh` (Linux/Mac)
+3. Настройте `config.txt` (токен бота + ID администратора)
+4. Запустите `start.bat` или `./start.sh`
 
-**Windows:**
-```bash
-# Скачайте репозиторий и запустите установщик
-git clone https://github.com/notamalvair/shop-telegram-bot.git
-cd shop-telegram-bot
-install.bat
-```
-
-**Linux/Mac:**
-```bash
-# Скачайте репозиторий и запустите установщик
-git clone https://github.com/notamalvair/shop-telegram-bot.git
-cd shop-telegram-bot
-./install.sh
-```
-
-### Ручная установка
-
-1. **Настройка конфигурации:**
-```bash
-cp config.example.txt config.txt
-# Отредактируйте config.txt своими данными
-```
-
-2. **Установка зависимостей:**
-```bash
-pip install -r requirements-windows.txt
-mkdir -p src/backups  # Linux/Mac
-mkdir src\backups     # Windows
-```
-
-3. **Запуск:**
-```bash
-cd src
-python main.py
-```
-
-### 📖 Подробные инструкции
-- Полное руководство по установке: **[LOCAL_SETUP.md](LOCAL_SETUP.md)**
-- Решение проблем: **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)**
+### 📖 Документация
+- **[QUICK_START.md](QUICK_START.md)** - быстрый старт за 4 шага
+- **[LOCAL_SETUP.md](LOCAL_SETUP.md)** - подробное руководство
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - решение проблем
+- **[BOT_SETUP.md](BOT_SETUP.md)** - создание бота в Telegram
 
 ## 🤖 Подробная настройка бота
 Если нужна помощь с созданием бота: [BOT_SETUP.md](BOT_SETUP.md)

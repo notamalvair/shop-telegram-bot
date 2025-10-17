@@ -171,7 +171,7 @@ async def welcome(message: types.Message):
             print(f"DEBUG: FAILED TO SEND STICKER TO {message.chat.id}. sticker.tgs is probably missing in the bot's root folder.")
     await bot.send_message(
         chat_id=message.chat.id,
-        text=settings.get_shop_greeting(),
+        text=settings.get_greeting(),
         reply_markup=markupMain,
     )
 
@@ -1463,7 +1463,7 @@ async def process_callback(callback_query: types.CallbackQuery):
             await bot.edit_message_text(
                 chat_id=chat_id,
                 message_id=callback_query.message.message_id,
-                text=settings.get_shop_contacts(),
+                text=settings.get_contacts(),
                 reply_markup=markups.single_button(markups.btnBackFaq),
             )
         elif call_data == "refund":
@@ -2049,8 +2049,8 @@ async def changeShopGreetingSetGreeting(message: types.Message, state: FSMContex
     state = Dispatcher.get_current().current_state()
     data = await state.get_data()
     try:
-        text = f"Приветствие магазина было изменено с \"{settings.get_shop_greeting()}\" на \"{message.text}\"."
-        settings.set_shop_greeting(message.text)
+        text = f"Приветствие магазина было изменено с \"{settings.get_greeting()}\" на \"{message.text}\"."
+        settings.set_greeting(message.text)
     except:
         text = tt.error
     await bot.delete_message(
@@ -2090,7 +2090,7 @@ async def changeShopContactsSetContacts(message: types.Message, state: FSMContex
     data = await state.get_data()
     try:
         text = f"Текст для вкладки \"Контакты\" был изменен с \"{settings.get_shop_name()}\" на \"{message.text}\"."
-        settings.set_shop_contacts(message.text)
+        settings.set_contacts(message.text)
     except:
         text = tt.error
     await bot.delete_message(

@@ -75,3 +75,60 @@ aiogram.utils.exceptions.NetworkError: Aiohttp client throws an error: ServerDis
 2025-10-17 13:17:24,223 - __main__ - INFO - ✅ Фоновые задачи запущены
 2025-10-17 13:17:24,223 - __main__ - INFO - 🔄 Фоновая задача запущена
 2025-10-17 13:17:24,223 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2025-10-17 13:23:21,389 - main - INFO - 🚀 Запуск бота...
+2025-10-17 13:23:21,389 - main - INFO - ✅ Настройки загружены
+2025-10-17 13:23:21,389 - main - INFO - 🔧 Инициализация базы данных...
+2025-10-17 13:23:21,390 - main - INFO - ✅ База данных готова!
+2025-10-17 13:23:21,390 - main - INFO - ✅ Подключение к базе данных установлено
+2025-10-17 13:23:21,397 - main - INFO - ✅ Бот и диспетчер инициализированы
+2025-10-17 13:23:21,399 - __main__ - INFO - 🚀 Запуск бота...
+2025-10-17 13:23:21,400 - __main__ - INFO - ✅ Настройки загружены
+2025-10-17 13:23:21,400 - __main__ - INFO - 🔧 Инициализация базы данных...
+2025-10-17 13:23:21,400 - __main__ - INFO - ✅ База данных готова!
+2025-10-17 13:23:21,400 - __main__ - INFO - ✅ Подключение к базе данных установлено
+2025-10-17 13:23:21,405 - __main__ - INFO - ✅ Бот и диспетчер инициализированы
+2025-10-17 13:23:21,407 - __main__ - INFO - 🤖 Запуск Telegram бота...
+2025-10-17 13:23:21,407 - __main__ - INFO - 📡 Подключение к Telegram API...
+2025-10-17 13:23:21,793 - aiogram - INFO - Bot: Склад РБС [@Mobile_Hub116_bot]
+2025-10-17 13:23:22,031 - aiogram - WARNING - Updates were skipped successfully.
+2025-10-17 13:23:22,032 - __main__ - INFO - 🔄 Запуск фоновых задач...
+2025-10-17 13:23:22,032 - __main__ - INFO - ✅ Фоновые задачи запущены
+2025-10-17 13:23:22,032 - __main__ - INFO - 🔄 Фоновая задача запущена
+2025-10-17 13:23:22,032 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2025-10-17 13:23:37,698 - aiogram.dispatcher.dispatcher - INFO - Stop polling...
+2025-10-17 13:23:37,699 - aiogram.dispatcher.dispatcher - ERROR - Cause exception while getting updates.
+Traceback (most recent call last):
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiogram/bot/api.py", line 139, in make_request
+    async with session.post(url, data=req, **kwargs) as response:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiohttp/client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiohttp/client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiohttp/client.py", line 748, in _connect_and_send_request
+    await resp.start(conn)
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiohttp/client_reqrep.py", line 532, in start
+    message, payload = await protocol.read()  # type: ignore[union-attr]
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiohttp/streams.py", line 672, in read
+    await self._waiter
+aiohttp.client_exceptions.ServerDisconnectedError: Server disconnected
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiogram/dispatcher/dispatcher.py", line 382, in start_polling
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiogram/bot/bot.py", line 110, in get_updates
+    result = await self.request(api.Methods.GET_UPDATES, payload)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiogram/bot/base.py", line 236, in request
+    return await api.make_request(await self.get_session(), self.server, self.__token, method, data, files,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/micromamba/envs/openhands/lib/python3.12/site-packages/aiogram/bot/api.py", line 142, in make_request
+    raise exceptions.NetworkError(f"aiohttp client throws an error: {e.__class__.__name__}: {e}")
+aiogram.utils.exceptions.NetworkError: Aiohttp client throws an error: ServerDisconnectedError: Server disconnected
+2025-10-17 13:23:37,701 - aiogram - WARNING - Goodbye!

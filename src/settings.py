@@ -141,7 +141,7 @@ class Settings:
     def remove_database(self):
         try:
             from os import remove
-            remove("../database.db")
+            remove("data.db")
             return True
         except:
             return False

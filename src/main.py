@@ -10,6 +10,7 @@ from string import ascii_lowercase, ascii_uppercase, digits
 from re import match as matchre
 from phonenumbers import parse as phoneparse
 from phonenumbers import is_possible_number
+import os
 from os import getcwd, listdir, remove, mkdir, rmdir
 from os.path import getsize, exists
 from shutil import copyfile
@@ -27,15 +28,16 @@ from settings import Settings
 import commands 
 import search
 
-conn = sqlite3.connect("data.db")
-c = conn.cursor()
-
 settings = Settings()
 
 # Инициализация базы данных
 print("🔧 Инициализация базы данных...")
 settings.create_database()
 print("✅ База данных готова!")
+
+# Подключение к базе данных после инициализации
+conn = sqlite3.connect("data.db")
+c = conn.cursor()
 
 storage = MemoryStorage()
 bot = Bot(token=settings.get_token())

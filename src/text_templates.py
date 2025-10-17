@@ -153,8 +153,7 @@ disable_phone_number = "✅ Номер телефона при заказе"
 enable_delivery = "❌ Доставка"
 disable_delivery = "✅ Доставка"
 def delivery_price(price): return f"🚚 Стоимость доставки: {price}руб."
-enable_captcha = "❌ CAPTCHA при заказе"
-disable_captcha = "✅ CAPTCHA при заказе"
+
 enable_debug = "❌ Режим отладки"
 disable_debug = "✅ Режим отладки"
 

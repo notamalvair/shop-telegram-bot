@@ -92,11 +92,7 @@ class Settings:
     def set_delivery_price(self, value):
         self.__set_setting("shop_settings", "delivery_price", value)
         
-    def is_captcha_enabled(self):
-        return self.__get_config()["shop_settings"]["enablecaptcha"] == "1"
-    
-    def set_enable_captcha(self, value):
-        self.__set_setting("shop_settings", "enablecaptcha", value)
+
         
     # stats_settings
     def get_barcolor(self):
@@ -145,7 +141,7 @@ enablesticker = 0
 enablephonenumber = 0
 enabledelivery = 0
 delivery_price = 0.0
-enablecaptcha = 1
+
 
 [stats_settings]
 barcolor = 3299ff

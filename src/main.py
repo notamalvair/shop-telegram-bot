@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import message, user
 from random import choice, randint
 from string import ascii_lowercase, ascii_uppercase, digits
-from captcha.image import ImageCaptcha
+
 from re import match as matchre
 from phonenumbers import parse as phoneparse
 from phonenumbers import is_possible_number
@@ -68,13 +68,7 @@ def clean_images():
     return cleaned_size / 1048576
 
 
-def get_captcha_text(): return ''.join([choice(ascii_uppercase + digits) for i in range(5)])
 
-def generate_captcha(captcha_text):
-    image = ImageCaptcha(width=280, height=90)
-    image.generate(captcha_text)
-    image.write(captcha_text, "images/captcha.png")
-    return open("images/captcha.png", "rb")
 
 
 async def notify_admins(text):
@@ -491,7 +485,7 @@ async def process_callback(callback_query: types.CallbackQuery):
                     message_id=callback_query.message.message_id,
                     chat_id=chat_id
                 )
-                await bot.send_photo(
+                await bot.send_message(
                     chat_id=chat_id,
                     caption=text,
                     photo=item.get_image(),
@@ -521,7 +515,7 @@ async def process_callback(callback_query: types.CallbackQuery):
                     message_id=callback_query.message.message_id,
                     chat_id=chat_id
                 )
-                await bot.send_photo(
+                await bot.send_message(
                     chat_id=chat_id,
                     caption=text,
                     photo=item.get_image(),
@@ -551,7 +545,7 @@ async def process_callback(callback_query: types.CallbackQuery):
                     message_id=callback_query.message.message_id,
                     chat_id=chat_id
                 )
-                await bot.send_photo(
+                await bot.send_message(
                     chat_id=chat_id,
                     caption=text,
                     photo=item.get_image(),
@@ -604,7 +598,7 @@ async def process_callback(callback_query: types.CallbackQuery):
                     message_id=callback_query.message.message_id,
                     chat_id=chat_id
                 )
-                await bot.send_photo(
+                await bot.send_message(
                     chat_id=chat_id,
                     caption=text,
                     photo=item.get_image(),
@@ -755,26 +749,25 @@ async def process_callback(callback_query: types.CallbackQuery):
             
             match call_data:
                 case "AllTime":
-                    photo = charts.all_time()
+                    stats_text = charts.all_time()
                     text = tt.all_time
                 case "Monthly":
-                    photo = charts.last_x_days(30)
+                    stats_text = charts.last_x_days(30)
                     text = tt.monthly
                 case "Weekly":
-                    photo = charts.last_x_days(7)
+                    stats_text = charts.last_x_days(7)
                     text = tt.weekly
                 case "Daily":
-                    photo = charts.last_x_hours(24)
+                    stats_text = charts.last_x_hours(24)
                     text = tt.daily
 
             await bot.delete_message(
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                photo=photo,
-                caption=text,
+                text=f"{text}\n\n{stats_text}",
                 reply_markup=markups.single_button(markups.btnBackRegistratonStats)
             )
         elif call_data == "orderStats":
@@ -800,26 +793,25 @@ async def process_callback(callback_query: types.CallbackQuery):
             
             match call_data:
                 case "AllTime":
-                    photo = charts.all_time()
+                    stats_text = charts.all_time()
                     text = tt.all_time
                 case "Monthly":
-                    photo = charts.last_x_days(30)
+                    stats_text = charts.last_x_days(30)
                     text = tt.monthly
                 case "Weekly":
-                    photo = charts.last_x_days(7)
+                    stats_text = charts.last_x_days(7)
                     text = tt.weekly
                 case "Daily":
-                    photo = charts.last_x_hours(24)
+                    stats_text = charts.last_x_hours(24)
                     text = tt.daily
 
             await bot.delete_message(
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                photo=photo,
-                caption=text,
+                text=f"{text}\n\n{stats_text}",
                 reply_markup=markups.single_button(markups.btnBackOrderStats)
             )
 
@@ -923,8 +915,7 @@ async def process_callback(callback_query: types.CallbackQuery):
                         settings.set_enable_phone_number("0" if settings.is_phone_number_enabled() else "1")
                     case "Delivery":
                         settings.set_delivery("0" if settings.is_delivery_enabled() else "1")
-                    case "Captcha":
-                        settings.set_enable_captcha("0" if settings.is_captcha_enabled() else "1")
+
                 text = tt.checkout_settings
                 markup = markups.get_markup_checkoutSettings()
                 
@@ -967,10 +958,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.stats_settings,
-                photo=stats.get_random_graph(),
+                text=f"{tt.stats_settings}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettings()
             )
         elif call_data == "statsSettingsColor":
@@ -978,10 +968,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.graph_color,
-                photo=stats.get_random_graph(),
+                text=f"{tt.graph_color}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsColor()
             )
         elif call_data.startswith("statsSettingsColor"):
@@ -1010,10 +999,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.graph_color,
-                photo=stats.get_random_graph(),
+                text=f"{tt.graph_color}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsColor()
             )
         elif call_data == "statsSettingsBorderWidth":
@@ -1021,10 +1009,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.border_width,
-                photo=stats.get_random_graph(),
+                text=f"{tt.border_width}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsBorderWidth()
             )
         elif call_data.startswith("statsSettingsBorderWidth"):
@@ -1040,10 +1027,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.border_width,
-                photo=stats.get_random_graph(),
+                text=f"{tt.border_width}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsBorderWidth()
             )
         elif call_data == "statsSettingsTitleFontSize":
@@ -1051,10 +1037,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.title_font_size,
-                photo=stats.get_random_graph(),
+                text=f"{tt.title_font_size}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsTitleFontSize()
             )
         elif call_data.startswith("statsSettingsTitleFontSize"):
@@ -1070,10 +1055,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.title_font_size,
-                photo=stats.get_random_graph(),
+                text=f"{tt.title_font_size}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsTitleFontSize()
             )
         elif call_data == "statsSettingsAxisFontSize":
@@ -1081,10 +1065,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.axis_font_size,
-                photo=stats.get_random_graph(),
+                text=f"{tt.axis_font_size}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsAxisFontSize()
             )
     
@@ -1101,10 +1084,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.axis_font_size,
-                photo=stats.get_random_graph(),
+                text=f"{tt.axis_font_size}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsAxisFontSize()
             )
             
@@ -1113,10 +1095,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.tick_font_size,
-                photo=stats.get_random_graph(),
+                text=f"{tt.tick_font_size}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsTickFontSize()
             )
             
@@ -1133,10 +1114,9 @@ async def process_callback(callback_query: types.CallbackQuery):
                 message_id=callback_query.message.message_id,
                 chat_id=chat_id
             )
-            await bot.send_photo(
+            await bot.send_message(
                 chat_id=chat_id,
-                caption=tt.tick_font_size,
-                photo=stats.get_random_graph(),
+                text=f"{tt.tick_font_size}\n\n{stats.get_random_stats()}",
                 reply_markup=markups.get_markup_statsSettingsTickFontSize()
             )
         
@@ -1534,7 +1514,7 @@ async def process_callback(callback_query: types.CallbackQuery):
                     message_id=callback_query.message.message_id,
                     chat_id=chat_id
                 )
-                await bot.send_photo(
+                await bot.send_message(
                     chat_id=chat_id,
                     caption=text,
                     photo=item.get_image(),
@@ -1769,7 +1749,7 @@ async def addItemSetImage(message: types.Message, state: FSMContext):
     
     cat = category.Category(data["cat_id"])
     text = tt.get_item_card(name=data["name"], price=data["price"], desc=data["desc"], amount=0) + f"\nКатегория: {cat.get_name()}\n\nВы уверены, что хотите добавить \"{data['name']}\" в каталог?"    
-    await bot.send_photo(
+    await bot.send_message(
         chat_id=message.chat.id,
         photo=open(f"images/{image_id}", "rb"),
         caption=text,
@@ -2163,46 +2143,14 @@ async def checkoutCartSetAdditionalMessage(message: types.Message, state: FSMCon
     data = await state.get_data()
     user = usr.User(message.chat.id)
     await state.update_data(additional_message=message.text)
-    if settings.is_captcha_enabled():
-        captcha_text = get_captcha_text()
-        await state.update_data(captcha=captcha_text)
-        await bot.send_photo(
-            chat_id=message.chat.id,
-            caption=f"Введите текст с картинки для подтверждения заказа.",
-            photo=generate_captcha(captcha_text),
-            reply_markup=markups.get_markup_captcha()
-        )
-        await state_handler.checkoutCart.captcha.set()
-    else:
-        await bot.send_message(
-            chat_id=message.chat.id,
-            text=tt.get_order_confirmation_template(item_amount_dict=user.get_cart_amount(), cart_price=user.get_cart_price(), email_adress=data["email"], additional_message=message.text, phone_number=data["phone_number"] if settings.is_phone_number_enabled() else None, home_adress=data["home_adress"] if settings.is_delivery_enabled() and user.is_cart_delivery() else None),
-            reply_markup=markups.get_markup_checkoutCartConfirmation(),
-        )
-        await state_handler.checkoutCart.confirmation.set()
+    await bot.send_message(
+        chat_id=message.chat.id,
+        text=tt.get_order_confirmation_template(item_amount_dict=user.get_cart_amount(), cart_price=user.get_cart_price(), email_adress=data["email"], additional_message=message.text, phone_number=data["phone_number"] if settings.is_phone_number_enabled() else None, home_adress=data["home_adress"] if settings.is_delivery_enabled() and user.is_cart_delivery() else None),
+        reply_markup=markups.get_markup_checkoutCartConfirmation(),
+    )
+    await state_handler.checkoutCart.confirmation.set()
         
-@dp.message_handler(state=state_handler.checkoutCart.captcha)
-async def checkoutCartCheckCaptcha(message: types.Message, state: FSMContext):
-    state = Dispatcher.get_current().current_state()
-    data = await state.get_data()
-    user = usr.User(data["user_id"])
-    if message.text.lower() == data["captcha"].lower():
-        await bot.send_message(
-            chat_id=message.chat.id,
-            text=tt.get_order_confirmation_template(item_amount_dict=user.get_cart_amount(), cart_price=user.get_cart_price(), email_adress=data["email"], additional_message=data["additional_message"], phone_number=data["phone_number"] if settings.is_phone_number_enabled() else None, home_adress=data["home_adress"] if settings.is_delivery_enabled() and user.is_cart_delivery() else None),
-            reply_markup=markups.get_markup_checkoutCartConfirmation(),
-        )
-        await state_handler.checkoutCart.confirmation.set()
-    else:
-        captcha_text = get_captcha_text()
-        await state.update_data(captcha=captcha_text)
-        await bot.send_photo(
-            chat_id=message.chat.id,
-            caption=f"Введите текст с картинки для подтверждения заказа.",
-            photo=generate_captcha(captcha_text),
-            reply_markup=markups.get_markup_captcha()
-        )
-        await state_handler.checkoutCart.captcha.set() 
+
 
 @dp.message_handler(state=state_handler.addCustomCommand.command)
 async def addCustomCommandSetCommand(message: types.Message, state: FSMContext):
@@ -2383,7 +2331,7 @@ async def cancelState(callback_query: types.CallbackQuery, state: FSMContext):
                     message_id=callback_query.message.message_id,
                     chat_id=chat_id
                 )
-                await bot.send_photo(
+                await bot.send_message(
                     chat_id=chat_id,
                     caption=text,
                     photo=item.get_image(),
@@ -2456,20 +2404,7 @@ async def cancelState(callback_query: types.CallbackQuery, state: FSMContext):
                 reply_markup=markup,
             )
             await state.finish()
-        elif call_data == "refreshCaptcha":
-            captcha_text = get_captcha_text()
-            await state.update_data(captcha=captcha_text)
-            await bot.delete_message(
-                message_id=callback_query.message.message_id,
-                chat_id=chat_id
-            )
-            await bot.send_photo(
-                chat_id=chat_id,
-                caption=f"Введите текст с картинки для подтверждения заказа.",
-                photo=generate_captcha(captcha_text),
-                reply_markup=markups.get_markup_captcha()
-            )
-            await state_handler.checkoutCart.captcha.set() 
+
         elif call_data == "checkoutCartConfirm":
             while True:
                 order_id = randint(100000, 999999)

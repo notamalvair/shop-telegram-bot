@@ -24,7 +24,7 @@ enablesticker = 0
 enablephonenumber = 0
 enabledelivery = 0
 delivery_price = 0.0
-enablecaptcha = 1
+
 
 [stats_settings]
 barcolor = 3299ff

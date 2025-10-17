@@ -77,7 +77,7 @@ class checkoutCart(StatesGroup):
     # Additional
     phone_number = State()
     home_adress = State()
-    captcha = State()
+
 
 # Main settings
 class changeShopName(StatesGroup):

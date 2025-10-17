@@ -126,11 +126,7 @@ def get_markup_cart(user):
     markup.add(types.InlineKeyboardButton(text=tt.cart_checkout, callback_data="checkoutCart"))   
     return markup
 
-def get_markup_captcha():
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton(text="Новая CAPTCHA", callback_data="refreshCaptcha"))
-    markup.add(btnBackCartDel)
-    return markup
+
 
 def get_markup_checkoutCartConfirmation():
     markup = types.InlineKeyboardMarkup()
@@ -335,7 +331,7 @@ def get_markup_checkoutSettings():
     markup.add(types.InlineKeyboardButton(text=tt.delivery_price('{:.2f}'.format(settings.get_delivery_price())), callback_data="admin_changeDeliveryPrice"))
     markup.add(types.InlineKeyboardButton(text=tt.disable_delivery if settings.is_delivery_enabled() else tt.enable_delivery, callback_data="admin_changeEnableDelivery"))
     markup.add(types.InlineKeyboardButton(text=tt.disable_phone_number if settings.is_phone_number_enabled() else tt.enable_phone_number, callback_data="admin_changeEnablePhoneNumber"))
-    markup.add(types.InlineKeyboardButton(text=tt.disable_captcha if settings.is_captcha_enabled() else tt.enable_captcha, callback_data="admin_changeEnableCaptcha"))
+
     markup.add(btnBackShopSettings)
     return markup
 

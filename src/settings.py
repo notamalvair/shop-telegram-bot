@@ -103,11 +103,12 @@ class Settings:
         
         cursor.execute("""CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY,
-            username TEXT,
-            first_name TEXT,
-            last_name TEXT,
-            phone_number TEXT,
-            registration_date TEXT
+            is_admin INTEGER DEFAULT 0,
+            is_manager INTEGER DEFAULT 0,
+            notification INTEGER DEFAULT 0,
+            registration_date TEXT,
+            cart TEXT DEFAULT 'None',
+            cart_delivery INTEGER DEFAULT 1
         )""")
         
         cursor.execute("""CREATE TABLE IF NOT EXISTS items (
@@ -145,3 +146,51 @@ class Settings:
             return True
         except:
             return False
+    
+    def migrate_database(self):
+        """Миграция базы данных для исправления структуры таблицы users"""
+        conn = sqlite3.connect("data.db")
+        cursor = conn.cursor()
+        
+        try:
+            # Проверяем структуру таблицы users
+            cursor.execute("PRAGMA table_info(users)")
+            columns = cursor.fetchall()
+            
+            # Если таблица имеет неправильную структуру, пересоздаем её
+            if len(columns) != 7 or columns[1][1] != 'is_admin':
+                print("🔄 Миграция базы данных...")
+                
+                # Сохраняем существующие данные
+                cursor.execute("SELECT * FROM users")
+                existing_users = cursor.fetchall()
+                
+                # Удаляем старую таблицу
+                cursor.execute("DROP TABLE IF EXISTS users")
+                
+                # Создаем новую таблицу с правильной структурой
+                cursor.execute("""CREATE TABLE users (
+                    user_id INTEGER PRIMARY KEY,
+                    is_admin INTEGER DEFAULT 0,
+                    is_manager INTEGER DEFAULT 0,
+                    notification INTEGER DEFAULT 0,
+                    registration_date TEXT,
+                    cart TEXT DEFAULT 'None',
+                    cart_delivery INTEGER DEFAULT 1
+                )""")
+                
+                # Восстанавливаем данные (если они были)
+                for user in existing_users:
+                    if len(user) >= 1:  # Есть хотя бы user_id
+                        cursor.execute("""INSERT INTO users 
+                            (user_id, is_admin, is_manager, notification, registration_date, cart, cart_delivery) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?)""", 
+                            [user[0], 0, 0, 0, "2024-01-01 00:00:00", "None", 1])
+                
+                conn.commit()
+                print("✅ Миграция завершена")
+                
+        except Exception as e:
+            print(f"❌ Ошибка миграции: {e}")
+        finally:
+            conn.close()

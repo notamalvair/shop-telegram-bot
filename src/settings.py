@@ -1,174 +1,147 @@
-from configparser import ConfigParser
-from genericpath import exists
-from os import remove
+from simple_config import config
 import sqlite3
 
 class Settings:
-    def __init__(self, config_path="config.ini"):
-        self.__config_path = config_path
-
-    def __get_config(self):
-        conf = ConfigParser()
-        conf.read(self.__config_path)
-        return conf
-    
-    def __set_setting(self, category, subcategory, value):
-        conf = self.__get_config()
-        conf.set(category, subcategory, str(value))
-        with open(self.__config_path, 'w') as config:
-            conf.write(config)
+    def __init__(self):
+        pass
     
     # main_settings
     def get_token(self):
-        try:
-            return self.__get_config()["main_settings"]["token"]
-        except KeyError:
-            print("❌ Ошибка: Конфигурационный файл не найден или не настроен!")
-            print("📋 Сначала запустите установщик:")
-            print("   python installer.py")
-            print("   или")
-            print("   python3 installer.py")
+        token = config.get('BOT_TOKEN')
+        if not token:
+            print("❌ Ошибка: Токен бота не найден в config.txt!")
+            print("📋 Проверьте файл config.txt в корневой папке проекта")
             exit(1)
+        return token
     
     def set_token(self, value):
-        self.__set_setting("main_settings", "token", value)
+        # Для простого конфига не реализуем изменение через код
+        print("⚠️ Для изменения токена отредактируйте файл config.txt")
         
     def is_debug(self):
-        return self.__get_config()["main_settings"]["debug"] == "1"
+        return config.get_bool('DEBUG', False)
         
     def set_debug(self, value):
-        self.__set_setting("main_settings", "debug", value)
+        print("⚠️ Для изменения режима отладки отредактируйте файл config.txt")
     
     def get_main_admin_id(self):
-        return self.__get_config()["main_settings"]["mainadminid"]
+        admin_id = config.get('ADMIN_ID')
+        if not admin_id:
+            print("❌ Ошибка: ID администратора не найден в config.txt!")
+            exit(1)
+        return int(admin_id)
     
     def set_main_admin_id(self, value):
-        self.__set_setting("main_settings", "mainadminid", value)
+        print("⚠️ Для изменения ID администратора отредактируйте файл config.txt")
     
     # shop_settings
     def get_shop_name(self):
-        return self.__get_config()["shop_settings"]["name"]
+        return config.get('SHOP_NAME', 'Мой магазин')
     
     def set_shop_name(self, value):
-        self.__set_setting("shop_settings", "name", value)
+        print("⚠️ Для изменения названия магазина отредактируйте файл config.txt")
     
-    def get_shop_greeting(self):
-        return self.__get_config()["shop_settings"]["greeting"]
+    def get_greeting(self):
+        return config.get('GREETING', 'Добро пожаловать!')
     
-    def set_shop_greeting(self, value):
-        self.__set_setting("shop_settings", "greeting", value)
-    
-    def is_sticker_enabled(self):
-        return self.__get_config()["shop_settings"]["enablesticker"] == "1"
-    
-    def set_enable_sticker(self, value):
-        self.__set_setting("shop_settings", "enablesticker", value)
+    def set_greeting(self, value):
+        print("⚠️ Для изменения приветствия отредактируйте файл config.txt")
     
     def get_refund_policy(self):
-        return self.__get_config()["shop_settings"]["refundpolicy"]
+        return config.get('REFUND_POLICY', 'Политика возврата не указана')
     
     def set_refund_policy(self, value):
-        self.__set_setting("shop_settings", "refundpolicy", value)
+        print("⚠️ Для изменения политики возврата отредактируйте файл config.txt")
     
-    def get_shop_contacts(self):
-        return self.__get_config()["shop_settings"]["contacts"]
+    def get_contacts(self):
+        return config.get('CONTACTS', 'Контакты не указаны')
     
-    def set_shop_contacts(self, value):
-        self.__set_setting("shop_settings", "contacts", value)
+    def set_contacts(self, value):
+        print("⚠️ Для изменения контактов отредактируйте файл config.txt")
     
-    def is_item_image_enabled(self):
-        return self.__get_config()["shop_settings"]["enableimage"] == "1"
+    def is_image_enabled(self):
+        return config.get_bool('ENABLE_IMAGE', True)
     
-    def set_item_image(self, value):
-        self.__set_setting("shop_settings", "enableimage", value)    
-        
+    def set_image_enabled(self, value):
+        print("⚠️ Для изменения настроек изображений отредактируйте файл config.txt")
+    
+    def is_sticker_enabled(self):
+        return config.get_bool('ENABLE_STICKER', False)
+    
+    def set_sticker_enabled(self, value):
+        print("⚠️ Для изменения настроек стикеров отредактируйте файл config.txt")
+    
     def is_phone_number_enabled(self):
-        return self.__get_config()["shop_settings"]["enablephonenumber"] == "1"
+        return config.get_bool('ENABLE_PHONE_NUMBER', False)
     
-    def set_enable_phone_number(self, value):
-        self.__set_setting("shop_settings", "enablephonenumber", value)
-        
+    def set_phone_number_enabled(self, value):
+        print("⚠️ Для изменения настроек номера телефона отредактируйте файл config.txt")
+    
     def is_delivery_enabled(self):
-        return self.__get_config()["shop_settings"]["enabledelivery"] == "1"
+        return config.get_bool('ENABLE_DELIVERY', False)
     
-    def set_delivery(self, value):
-        self.__set_setting("shop_settings", "enabledelivery", value)
-        
+    def set_delivery_enabled(self, value):
+        print("⚠️ Для изменения настроек доставки отредактируйте файл config.txt")
+    
     def get_delivery_price(self):
-        return float(self.__get_config()["shop_settings"]["delivery_price"])
+        return config.get_float('DELIVERY_PRICE', 0.0)
     
     def set_delivery_price(self, value):
-        self.__set_setting("shop_settings", "delivery_price", value)
+        print("⚠️ Для изменения цены доставки отредактируйте файл config.txt")
+    
+    # stats_settings (заглушки для совместимости)
+    def get_bar_color(self):
+        return "3299ff"  # Синий цвет по умолчанию
+    
+    def set_bar_color(self, value):
+        print("⚠️ Настройки статистики больше не используются")
+    
+    # database methods (сохраняем для совместимости)
+    def create_database(self):
+        conn = sqlite3.connect("../database.db")
+        cursor = conn.cursor()
         
-
+        cursor.execute("""CREATE TABLE IF NOT EXISTS users (
+            user_id INTEGER PRIMARY KEY,
+            username TEXT,
+            first_name TEXT,
+            last_name TEXT,
+            phone_number TEXT,
+            registration_date TEXT
+        )""")
         
-    # stats_settings
-    def get_barcolor(self):
-        return self.__get_config()["stats_settings"]["barcolor"]
-    
-    def set_barcolor(self, value):
-        self.__set_setting("stats_settings", "barcolor", value)
-    
-    def get_borderwidth(self):
-        return self.__get_config()["stats_settings"]["borderwidth"]
-    
-    def set_borderwidth(self, value):
-        self.__set_setting("stats_settings", "borderwidth", value)
-    
-    def get_titlefontsize(self):
-        return self.__get_config()["stats_settings"]["titlefontsize"]
-    
-    def set_titlefontsize(self, value):
-        self.__set_setting("stats_settings", "titlefontsize", value)
-    
-    def get_axisfontsize(self):
-        return self.__get_config()["stats_settings"]["axisfontsize"]
-    
-    def set_axisfontsize(self, value):
-        self.__set_setting("stats_settings", "axisfontsize", value)
-    
-    def get_tickfontsize(self):
-        return self.__get_config()["stats_settings"]["tickfontsize"]
-    
-    def set_tickfontsize(self, value):
-        self.__set_setting("stats_settings", "tickfontsize", value)
+        cursor.execute("""CREATE TABLE IF NOT EXISTS items (
+            item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            description TEXT,
+            price REAL NOT NULL,
+            image_path TEXT,
+            category TEXT
+        )""")
         
-    def reset(self):
-        DEFAULT_CONFIG_TEXT = f"""[main_settings]
-token = {self.get_token()}
-mainadminid = {self.get_main_admin_id()}
-debug = 0
-
-[shop_settings]
-name = Название магазина
-greeting = Добро пожаловать!
-refundpolicy = Текст для вкладки "Политика возврата"
-contacts = Текст для вкладки "Контакты"
-enableimage = 1
-enablesticker = 0
-enablephonenumber = 0
-enabledelivery = 0
-delivery_price = 0.0
-
-
-[stats_settings]
-barcolor = 3299ff
-borderwidth = 1
-titlefontsize = 20
-axisfontsize = 12
-tickfontsize = 8
-"""
-        if exists("config.ini"):
-            remove("config.ini")
-        with open("config.ini", "w") as config:
-            config.write(DEFAULT_CONFIG_TEXT)
-    
-    def clean_db(self):
-        conn = sqlite3.connect("data.db")
-        c = conn.cursor()
-        c.execute("DELETE FROM cats")
-        c.execute("DELETE FROM items")
-        c.execute("DELETE FROM orders")
-        c.execute("DELETE FROM commands")
+        cursor.execute("""CREATE TABLE IF NOT EXISTS orders (
+            order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            items TEXT,
+            total_price REAL,
+            order_date TEXT,
+            status TEXT,
+            delivery_address TEXT,
+            phone_number TEXT
+        )""")
+        
+        cursor.execute("""CREATE TABLE IF NOT EXISTS categories (
+            category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
+        )""")
+        
         conn.commit()
         conn.close()
+    
+    def remove_database(self):
+        try:
+            from os import remove
+            remove("../database.db")
+            return True
+        except:
+            return False

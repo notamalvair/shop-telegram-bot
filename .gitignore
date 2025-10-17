@@ -1,15 +1,31 @@
-/images
+# Конфиденциальные файлы
+config.txt
+config.ini
+database.db
 data.db
+
+# Изображения и медиа
+/images
+sticker.tgs
+
+# Python
 *.pyc
 *.pyd
-sticker.tgs
-config.ini
+__pycache__/
+
+# Тестовые и временные файлы
 src/test.py
+/tmp
+
+# AWS и ключи
 aws.sh
 KP.pem
+
+# Документация и заметки
 ideas.txt
-/tmp
 DOCS/overview.md
+
+# Модули и бэкапы
 src/modules/
 backups/
 logs/

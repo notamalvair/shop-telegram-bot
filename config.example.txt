@@ -1,0 +1,24 @@
+# Конфигурация Telegram бота
+# Скопируйте этот файл в config.txt и заполните своими данными
+
+# Токен бота (получите у @BotFather)
+BOT_TOKEN=YOUR_BOT_TOKEN_HERE
+
+# ID главного администратора (получите у @userinfobot)
+ADMIN_ID=YOUR_ADMIN_ID_HERE
+
+# Настройки магазина
+SHOP_NAME=Мой магазин
+GREETING=Добро пожаловать в наш магазин!
+REFUND_POLICY=Возврат товара возможен в течение 14 дней при сохранении чека и товарного вида.
+CONTACTS=Для связи: @your_username или +7 (xxx) xxx-xx-xx
+
+# Дополнительные настройки
+ENABLE_IMAGE=1
+ENABLE_STICKER=0
+ENABLE_PHONE_NUMBER=0
+ENABLE_DELIVERY=0
+DELIVERY_PRICE=0.0
+
+# Режим отладки (0 - выключен, 1 - включен)
+DEBUG=0

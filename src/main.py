@@ -1002,7 +1002,7 @@ async def process_callback(callback_query: types.CallbackQuery):
 
             except:
                 text = tt.error
-                if call_data[12:] in ["PhoneNumber", "Delivery", "Captcha"]:
+                if call_data[12:] in ["PhoneNumber", "Delivery"]:
                     markup = markups.single_button(markups.btnBackCheckoutSettings)
                 elif call_data[12:] == "Sticker":
                     markup = markups.single_button(markups.btnBackMainSettings)

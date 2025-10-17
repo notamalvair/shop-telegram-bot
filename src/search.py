@@ -1,13 +1,22 @@
-import pymorphy2
+try:
+    import pymorphy2
+    m = pymorphy2.MorphAnalyzer()
+    PYMORPHY_AVAILABLE = True
+except ImportError:
+    PYMORPHY_AVAILABLE = False
+    print("Warning: pymorphy2 not available, using simple search")
+
 from pyparsing import opAssoc
 import item as itm
-
-m = pymorphy2.MorphAnalyzer()
 
 excluded_words = ["без", "в", "для", "до", "за", "из", "к", "под", "а", "о", "над", "на", "о", "об", "от", "перед", "по", "под", "при", "про", "с", "у"]
 
 def get_normal_forms(word):
-    return set(p.normal_form for p in m.parse(word))
+    if PYMORPHY_AVAILABLE:
+        return set(p.normal_form for p in m.parse(word))
+    else:
+        # Простой fallback - возвращаем слово в нижнем регистре
+        return {word.lower()}
     
 
 class Query:

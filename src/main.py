@@ -43,6 +43,10 @@ dp = Dispatcher(bot, storage=storage)
 
 # Create a backup folder + copy the needed files there
 def create_backup():
+    # Создаем папку backups если её нет
+    if not os.path.exists("backups"):
+        os.makedirs("backups")
+    
     folder_path = "backups/" + datetime.date.today().strftime("%d-%m-%Y")
     if folder_path[8:] in listdir("backups"):
         for file in listdir(folder_path):

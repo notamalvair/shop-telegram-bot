@@ -22,10 +22,20 @@ $PYTHON_CMD --version
 
 echo
 echo "[2/4] Установка зависимостей..."
-$PYTHON_CMD -m pip install -r requirements-windows.txt
+echo "Попытка 1: Минимальные зависимости..."
+$PYTHON_CMD -m pip install -r requirements-minimal.txt
 if [ $? -ne 0 ]; then
-    echo "ОШИБКА: Не удалось установить зависимости!"
-    exit 1
+    echo "Попытка 2: Полные зависимости..."
+    $PYTHON_CMD -m pip install -r requirements-windows.txt
+    if [ $? -ne 0 ]; then
+        echo "Попытка 3: Только основные библиотеки..."
+        $PYTHON_CMD -m pip install aiogram==2.25.2 phonenumbers
+        if [ $? -ne 0 ]; then
+            echo "ОШИБКА: Не удалось установить зависимости!"
+            echo "Попробуйте установить вручную: pip install aiogram phonenumbers"
+            exit 1
+        fi
+    fi
 fi
 
 echo

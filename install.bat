@@ -15,11 +15,21 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [2/4] Установка зависимостей...
-pip install -r requirements-windows.txt
+echo Попытка 1: Минимальные зависимости...
+pip install -r requirements-minimal.txt
 if %errorlevel% neq 0 (
-    echo ОШИБКА: Не удалось установить зависимости!
-    pause
-    exit /b 1
+    echo Попытка 2: Полные зависимости...
+    pip install -r requirements-windows.txt
+    if %errorlevel% neq 0 (
+        echo Попытка 3: Только основные библиотеки...
+        pip install aiogram==2.25.2 phonenumbers
+        if %errorlevel% neq 0 (
+            echo ОШИБКА: Не удалось установить зависимости!
+            echo Попробуйте установить вручную: pip install aiogram phonenumbers
+            pause
+            exit /b 1
+        )
+    )
 )
 
 echo.

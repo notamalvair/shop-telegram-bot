@@ -1,5 +1,6 @@
 import asyncio
 import sqlite3
+import logging
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
@@ -16,6 +17,17 @@ from os.path import getsize, exists
 from shutil import copyfile
 import datetime
 
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('bot.log', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
 import markups
 import state_handler
 import user as usr
@@ -28,36 +40,68 @@ from settings import Settings
 import commands 
 import search
 
-settings = Settings()
+logger.info("🚀 Запуск бота...")
+
+try:
+    settings = Settings()
+    logger.info("✅ Настройки загружены")
+except Exception as e:
+    logger.error(f"❌ Ошибка загрузки настроек: {e}")
+    exit(1)
 
 # Инициализация базы данных
-print("🔧 Инициализация базы данных...")
-settings.create_database()
-print("✅ База данных готова!")
+try:
+    print("🔧 Инициализация базы данных...")
+    logger.info("🔧 Инициализация базы данных...")
+    settings.create_database()
+    print("✅ База данных готова!")
+    logger.info("✅ База данных готова!")
+except Exception as e:
+    logger.error(f"❌ Ошибка инициализации базы данных: {e}")
+    exit(1)
 
 # Подключение к базе данных после инициализации
-conn = sqlite3.connect("data.db")
-c = conn.cursor()
+try:
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+    logger.info("✅ Подключение к базе данных установлено")
+except Exception as e:
+    logger.error(f"❌ Ошибка подключения к базе данных: {e}")
+    exit(1)
 
-storage = MemoryStorage()
-bot = Bot(token=settings.get_token())
-dp = Dispatcher(bot, storage=storage)
+try:
+    storage = MemoryStorage()
+    bot = Bot(token=settings.get_token())
+    dp = Dispatcher(bot, storage=storage)
+    logger.info("✅ Бот и диспетчер инициализированы")
+except Exception as e:
+    logger.error(f"❌ Ошибка инициализации бота: {e}")
+    exit(1)
 
 # Create a backup folder + copy the needed files there
 def create_backup():
-    # Создаем папку backups если её нет
-    if not os.path.exists("backups"):
-        os.makedirs("backups")
-    
-    folder_path = "backups/" + datetime.date.today().strftime("%d-%m-%Y")
-    if folder_path[8:] in listdir("backups"):
-        for file in listdir(folder_path):
-            remove(folder_path + "/" + file)
-        rmdir(folder_path)
-    mkdir(folder_path)
-    copyfile("config.txt", folder_path + "/config.txt")
-    copyfile("data.db", folder_path + "/data.db")
-    print("Backup created!")
+    try:
+        logger.info("💾 Создание резервной копии...")
+        # Создаем папку backups если её нет
+        if not os.path.exists("backups"):
+            os.makedirs("backups")
+            logger.info("📁 Создана папка backups")
+        
+        folder_path = "backups/" + datetime.date.today().strftime("%d-%m-%Y")
+        if folder_path[8:] in listdir("backups"):
+            for file in listdir(folder_path):
+                remove(folder_path + "/" + file)
+            rmdir(folder_path)
+            logger.info(f"🗑️ Удалена старая резервная копия: {folder_path}")
+        
+        mkdir(folder_path)
+        copyfile("config.txt", folder_path + "/config.txt")
+        copyfile("data.db", folder_path + "/data.db")
+        print("Backup created!")
+        logger.info(f"✅ Резервная копия создана: {folder_path}")
+    except Exception as e:
+        logger.error(f"❌ Ошибка создания резервной копии: {e}")
+        print(f"Backup failed: {e}")
 
 def clean_backups(days_ago=0):
     longest_date = datetime.date.today() - datetime.timedelta(days=days_ago)
@@ -96,9 +140,16 @@ async def notify_admins(text):
 
 @dp.message_handler(commands=["start"])
 async def welcome(message: types.Message):
+    logger.info(f"📨 Получена команда /start от пользователя {message.chat.id} (@{message.from_user.username})")
     if settings.is_debug():
         print(f"DEBUG: COMMAND [{message.chat.id}] {message.text}")
-    user = usr.User(message.chat.id)
+    
+    try:
+        user = usr.User(message.chat.id)
+        logger.info(f"✅ Пользователь {message.chat.id} загружен из базы данных")
+    except Exception as e:
+        logger.error(f"❌ Ошибка загрузки пользователя {message.chat.id}: {e}")
+        return
 
     markupMain = markups.get_markup_main()
     if user.is_manager() or user.is_admin():
@@ -2456,13 +2507,31 @@ async def cancelState(callback_query: types.CallbackQuery, state: FSMContext):
             await state.finish()
 
 async def background_runner():
+    logger.info("🔄 Фоновая задача запущена")
     while True:
-        if not exists("backups/" + datetime.date.today().strftime("%d-%m-%Y")):
-            create_backup()
-        await asyncio.sleep(60)
+        try:
+            backup_path = "backups/" + datetime.date.today().strftime("%d-%m-%Y")
+            if not exists(backup_path):
+                logger.info("⏰ Время создания ежедневной резервной копии")
+                create_backup()
+            await asyncio.sleep(60)
+        except Exception as e:
+            logger.error(f"❌ Ошибка в фоновой задаче: {e}")
+            await asyncio.sleep(60)
 
 async def on_startup(dp):
-    asyncio.create_task(background_runner())
+    logger.info("🔄 Запуск фоновых задач...")
+    try:
+        asyncio.create_task(background_runner())
+        logger.info("✅ Фоновые задачи запущены")
+    except Exception as e:
+        logger.error(f"❌ Ошибка запуска фоновых задач: {e}")
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
+    try:
+        logger.info("🤖 Запуск Telegram бота...")
+        logger.info("📡 Подключение к Telegram API...")
+        executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
+    except Exception as e:
+        logger.error(f"❌ Критическая ошибка запуска бота: {e}")
+        exit(1)
